@@ -34,12 +34,11 @@ def addres(max_count, results, df):
         return ''
 
 def main_get_address(photos):
-    start = time.time()
     df = pd.read_csv(f'service/static/addres_csv.csv')
-    # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-    param = {'long': 'Длинный', 'short': 'Короткий/Нет хвоста', 'dark': 'Темный', 'white': 'Светлый',
-             'multi-color': 'Светлый'}
-    apps_color, apps_tail = db.session.query(Application).first().color, db.session.query(Application).first().tail
+    #pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    param = {'long': 0, 'short': 1, 'dark': 1, 'white': 0,
+             'multi-color': 2}
+    apps_color, apps_tail = int(db.session.query(Application).first().color), int(db.session.query(Application).first().tail)
     for photo in photos:
         image = cv2.imread(f'service/uploads/{photo}')
         if image is None:
@@ -59,15 +58,15 @@ def main_get_address(photos):
                 result = 0
             if len(res) == 0:
                 if predict.text == 'Dogs not found! :(':
-                    db.session.add(Photos(id_application=1, filename=photo, is_animal_there=0, result=result))
+                    db.session.add(Photos(id_application=1, filename=photo, is_animal_there=0, is_it_a_dog=0, is_the_owner=0, result=result, cam_id='', address=''))
                 else:
-                    db.session.add(Photos(id_application=1, filename=photo, tail=param[predict.json()['tail']],is_animal_there=1, color=param[predict.json()['color']], result=result))
+                    db.session.add(Photos(id_application=1, filename=photo, tail=param[predict.json()['tail']],is_animal_there=1, is_it_a_dog=1, cam_id='', address='', color=param[predict.json()['color']], result=result))
             else:
                 if predict.text == 'Dogs not found! :(':
-                    db.session.add(Photos(id_application=1, filename=photo, address=re.sub(r'[^\w\s]','', res[0]).lower(),is_animal_there=0, cam_id=res[1], result=result))
+                    db.session.add(Photos(id_application=1, filename=photo, address=re.sub(r'[^\w\s]','', res[0]).lower(),is_animal_there=0, is_it_a_dog=0, is_the_owner=0, cam_id=res[1], result=result))
                 else:
                     db.session.add(
-                        Photos(id_application=1, filename=photo, address=re.sub(r'[^\w\s]','', res[0]).lower(), cam_id=res[1], tail=param[predict.json()['tail']], is_animal_there=1,
+                        Photos(id_application=1, filename=photo, is_it_a_dog=1, address=re.sub(r'[^\w\s]','', res[0]).lower(), cam_id=res[1], tail=param[predict.json()['tail']], is_animal_there=1,
                                color=param[predict.json()['color']], result=result))
             db.session.commit()
         db.session.query(Application).filter_by(id=1).update({Application.status: 1})

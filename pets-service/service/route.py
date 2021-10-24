@@ -30,13 +30,14 @@ def create():
     with open('service/static/district.json', 'rb') as file:
         j = json.load(file)
     districts = j['district']
+    param = {'Светлый':0, 'Темный':1, 'Разноцветный':2, 'Длинный':0, 'Короткий/Нет хвоста':1}
     if request.method == 'GET':
         if len(db.session.query(Application).all()) != 0:
             return redirect(url_for('result'))
         else:
             return render_template('create.html', districts=districts)
     if request.method == 'POST':
-        create = Application(animal='dog', photo=1, color=request.form.get('color'), tail=request.form.get('tils'))
+        create = Application(animal='dog', photo=1, color=param[request.form.get('color')], tail=param[request.form.get('tils')])
         db.session.add(create)
         db.session.commit()
         files = request.files.getlist("file")

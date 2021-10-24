@@ -17,8 +17,8 @@ class Photos(db.Model):
     is_animal_there = db.Column(db.Integer(), nullable=True)
     is_it_a_dog = db.Column(db.Integer(), nullable=True)
     is_the_owner = db.Column(db.Integer(), nullable=True)
-    color = db.Column(db.String(), nullable=True)
-    tail = db.Column(db.String(), nullable=True)
+    color = db.Column(db.Integer(), nullable=True)
+    tail = db.Column(db.Integer(), nullable=True)
     address = db.Column(db.String(), nullable=True)
     cam_id = db.Column(db.String(), nullable=True)
     result = db.Column(db.Boolean, nullable=True)
@@ -30,4 +30,4 @@ class Photos(db.Model):
 
 
 
-# db.create_all()
+db.create_all()

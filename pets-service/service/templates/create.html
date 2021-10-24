@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+    <meta name="docsearch:version" content="5.1">
+    <title>Создать заявку</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
+
+    <!-- Bootstrap core CSS -->
+
+    <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://getbootstrap.com/docs/5.1/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css"/>
+    <link rel="stylesheet" href="/../static/platform.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://sutara79.github.io/jquery.add-input-area/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://sutara79.github.io/jquery.add-input-area/dist/jquery.add-input-area.min.js"></script>
+
+    <!-- Favicons -->
+    <meta name="theme-color" content="#7952b3">
+</head>
+<body class="text-center"
+      style="background-image: url(https://luxfon.com/images/201407/luxfon.com_27447.jpg); background-size: cover; background-attachment: fixed;">
+<header class="d-flex justify-content-end">
+    <nav class="navbar navbar-expand-sm navbar-dark">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('main_page') }}">Главная траница</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('about_page') }}">О проекте</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container" id="load" style="display: none;">
+        <main>
+        <div class="py-5 text-center" style="color:white">
+            <h2>Заявка обрабатывается, пожалуйста подождите</h2>
+            <h4>Страница перезагрузится автоматически</h4>
+            <img src="static/4V0b.gif" alt="this slowpoke moves"  width="170" />
+        </div>
+        </main>
+</div>
+<div class="container" id="content">
+    <main>
+        <div class="py-5 text-center" style="color:white">
+            <h2>Заявка на поиск</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-8" style="color:white">
+                <form method="post" enctype="multipart/form-data" name="theform">
+                    <div class="row g-3">
+<!--                        <div class="col-sm-6">-->
+<!--                            <label for="firstName" class="form-label">Имя</label>-->
+<!--                            <input type="text" class="form-control" name="firstName" id="firstName" placeholder="" value="" required>-->
+<!--                        </div>-->
+<!--                        <div class="col-sm-6">-->
+<!--                            <label for="lastName" class="form-label">Фамилия</label>-->
+<!--                            <input type="text" class="form-control" name="lastName" id="lastName" placeholder="" value="" required>-->
+<!--                        </div>-->
+
+                        <div class="col-12 text-start">
+                            <label for="district" class="form-label">Выберете район</label>
+                            <input class="form-control" list="districtOptions"  name="district" id="district" placeholder="Введите для поиска" disabled>
+                            <datalist id="districtOptions">
+                                {%for district in districts%}
+                              <option value="{{district}}">
+                                {%endfor%}
+                            </datalist>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <label for="animal" class="form-label">Животное</label>
+                            <select class="form-select" id="animal" disabled>
+                                <option>Собака</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="color" class="form-label">Цвет</label>
+                            <select class="form-select" id="color" onChange="checkParams()" name="color" required>
+                                <option value="0">Выберите цвет животного</option>
+                                <option value="Светлый">Светлый</option>
+                                <option value="Темный">Темный</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="tils" class="form-label">Хвост</label>
+                            <select class="form-select" id="tils" onChange="checkParams()" name="tils" required>
+                                <option value="0">Выберите длину хвоста</option>
+                                <option value="Длинный">Длинный</option>
+                                <option value="Короткий/Нет хвоста">Короткий/Нет хвоста</option>
+                            </select>
+                        </div>
+                        <div class="col-12 text-start">
+                            <label for="file" class="form-label">Загрузите фотографию</label>
+                            <input class="form-control" onChange="checkParams()" type="file" name="file" id="file" multiple required>
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                            <div style="color:red">
+                            {% for message in messages %}
+                                <h4><strong>{{ message }}</strong></h4>
+                            {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="form-check text-start">
+                        <input type="checkbox" class="form-check-input" onchange="checkParams()" name="confirm" id="confirm">
+                        <label class="form-check-label" for="confirm"><strong>Согласен с обработкой данных</strong></label>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <button class="w-30 btn btn-primary btn-lg" type="submit" id="btnSubmit" disabled>Отправить заявку</button>
+
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    function checkParams() {
+    var select = theform.color.selectedIndex;
+    var select_2 = theform.tils.selectedIndex;
+    var file = document.getElementById("file");
+    var checkbox1 = $('#confirm').prop('checked');
+    if(select != 0 && select_2 != 0 && file.value != "" && checkbox1) {
+        $('#btnSubmit').removeAttr('disabled');
+    } else {
+        $('#btnSubmit').attr('disabled', 'disabled');
+    }
+}
+</script>
+ <script>
+    document.getElementById('btnSubmit').onclick = function() {
+      document.getElementById('content').hidden = true;
+      document.getElementById("load").style.display = "block";
+    }
+  </script>
+
+<script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</body>
+</html>
+

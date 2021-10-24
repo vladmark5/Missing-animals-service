@@ -1,0 +1,27 @@
+version: "3"
+services:
+  pets-api:
+    container_name: pets-api
+    restart: always
+    build:
+      context: ./pets-api
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    networks:
+      ml-network:
+        aliases:
+          - autograde_api
+
+  pets-service:
+    container_name: pets-service
+    restart: always
+    build:
+      context: ./pets-service
+      dockerfile: Dockerfile
+    ports:
+      - 5001:5000
+    networks:
+      - ml-network
+networks:
+  ml-network:

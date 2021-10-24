@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+    <meta name="docsearch:version" content="5.1">
+    <title>Результат поиска</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
+
+    <!-- Bootstrap core CSS -->
+
+    <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://getbootstrap.com/docs/5.1/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css"/>
+    <link rel="stylesheet" href="/../static/platform.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://sutara79.github.io/jquery.add-input-area/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://sutara79.github.io/jquery.add-input-area/dist/jquery.add-input-area.min.js"></script>
+
+    <!-- Favicons -->
+    <meta name="theme-color" content="#7952b3">
+</head>
+<body class="text-center"
+      style="background-image: url(https://luxfon.com/images/201407/luxfon.com_27447.jpg); background-size: cover; background-attachment: fixed;">
+<header class="d-flex justify-content-end">
+    <nav class="navbar navbar-expand-sm navbar-dark">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('main_page') }}">Главная траница</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('about_page') }}">О проекте</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+{% if apps.status == False %}
+<div class="container">
+    <main>
+        <div class="py-5 text-center" style="color:white">
+            <h2>Ваша заявка еще обрабатывается, пожалуйста подождите</h2>
+        </div>
+    </main>
+</div>
+{% else %}
+<div class="container">
+    <main>
+        <div class="py-5 text-center" style="color:white">
+            {% if files|length > 0 %}
+            <h2>Результат поиска</h2>
+            {% else %}
+            <h2>Данных для поиска нет </h2>
+            {% endif %}
+        </div>
+        <div class="row justify-content-center">
+
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                {% for file in files %}
+                <div class="col">
+                    <div class="card">
+                        <img class="img-thumbnail" src="{{ url_for('download_file', name=file.filename) }}" width="100%" height="100%" class="img-thumbnail" alt="...">
+                        <div class="card-body text-start">
+                            <p class="card-text">Адрес:  {% if file.address == None %}-{% else %}{{file.address}}{% endif %}</p>
+                            <p class="card-text">ID камеры:  {% if file.cam_id == None %}-{% else %}{{file.cam_id}}{% endif %}</p>
+                            <p class="card-text">Собака на фото: {% if file.is_animal_there == 1%}Да{% else %}Нет{% endif %}</p>
+                            <p class="card-text">Хозяин на фото: </p>
+                            <p class="card-text">Цвет: {% if file.color == None %}-{% else %}{{file.color}}{% endif %}</p>
+                            <p class="card-text">Длинна хвоста: {% if file.tail == None %}-{% else %}{{file.tail}}{% endif %}</p>
+                            <p class="card-text">Совпало с заданными параметрами: {% if file.result == 1 %}Да{% else %}Нет{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <form method="post" class="col-md-7 col-lg-8 py-5" style="color:white">
+                <button class="btn btn-primary btn-lg" type="submit" id="btnSubmit">Cоздать новую заявку</button>
+                <a href="{{ url_for('static', filename='result.csv') }}" type="button" class="btn btn-primary btn-lg" download>Скачать CSV</a>
+            </form>
+        </div>
+    </main>
+</div>
+{% endif %}
+<script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</body>
+</html>
+

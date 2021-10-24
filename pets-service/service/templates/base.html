@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="docsearch:language" content="en">
+    <meta name="docsearch:version" content="5.1">
+    <title>Главная</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
+
+    <!-- Bootstrap core CSS -->
+
+    <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://getbootstrap.com/docs/5.1/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/ui-lightness/jquery-ui.css"/>
+    <link rel="stylesheet" href="/../static/platform.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://sutara79.github.io/jquery.add-input-area/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://sutara79.github.io/jquery.add-input-area/dist/jquery.add-input-area.min.js"></script>
+
+    <!-- Favicons -->
+    <meta name="theme-color" content="#7952b3">
+</head>
+<body class="text-center"
+      style="background-image: url(https://luxfon.com/images/201407/luxfon.com_27447.jpg); background-size: cover; background-attachment: fixed;">
+<header class="d-flex justify-content-end">
+    <nav class="navbar navbar-expand-sm navbar-dark">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav">
+                    {% if apps == None %}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('create') }}">Создать заявку</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('result') }}">Результаты поиска</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('about_page') }}">О проекте</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container position-absolute top-50 start-50 translate-middle">
+    <main style="my-auto">
+        <div class="px-4 py-5 my-5 text-center">
+            <h1 class="display-5 fw-bold" style="color:white">ПУТЬ ДОМОЙ</h1>
+            <div class="col-lg-6  py-4 mx-auto">
+                <p class="lead mb-4" style="color:white"><strong>СЕРВИС ПОИСКА ДОМАШНИХ ЖИВОТНЫХ</strong></p>
+                <div class="d-grid gap-2 py-3 d-sm-flex justify-content-sm-center">
+                    {% if apps == None %}
+                    <a href="{{ url_for('create') }}" type="button" class="btn btn-light btn-lg px-4 gap-3">Заявка на
+                        поиск</a>
+                    {% else %}
+                    <a href="{{ url_for('result') }}" type="button" class="btn btn-light btn-lg px-4 gap-3">Моя заявка</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</body>
+</html>

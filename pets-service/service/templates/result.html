@@ -81,11 +81,12 @@
                                 endif %}</p>
                             <p class="card-text">Хозяин на фото:{% if file.is_the_owner == 1%}Да{% else %}Нет{% endif
                                 %} </p>
-                            <p class="card-text">Цвет: {% if file.color == 0 %}Темный{% elif file.color == 2 %}Светлы{%
+                            <p class="card-text">Цвет: {% if file.color == 1 %}Темный{% elif file.color == 2 %}Светлы{%
                                 else %}
                                 Разноцветный{% endif %}</p>
                             <p class="card-text">Длина хвоста: {% if file.tail == 2 %}Длинный
-                                {% elif file.tail == 0 %}Короткий/Нет хвоста{% else %}{% endif %}</p>
+                                {% elif file.tail == 1 %}Короткий/Нет хвоста{% else %}{% endif %}</p>
+                            <p class="card-text">Район: {% if file.district == None %}Не распознано{% else %}{{file.district}}{% endif %}</p>
                         </div>
                     </div>
                 </div>

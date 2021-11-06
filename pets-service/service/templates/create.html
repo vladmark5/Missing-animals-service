@@ -68,16 +68,7 @@
                         <!--                            <input type="text" class="form-control" name="lastName" id="lastName" placeholder="" value="" required>-->
                         <!--                        </div>-->
 
-                        <div class="col-12 text-start">
-                            <label for="district" class="form-label">Выберете район</label>
-                            <input class="form-control" list="districtOptions" name="district" id="district"
-                                   placeholder="Введите для поиска" disabled>
-                            <datalist id="districtOptions">
-                                {%for district in districts%}
-                                <option value="{{district}}">
-                                    {%endfor%}
-                            </datalist>
-                        </div>
+
 
 
                         <div class="col-md-4">
@@ -105,11 +96,27 @@
                                 <option value="Короткий/Нет хвоста">Короткий/Нет хвоста</option>
                             </select>
                         </div>
+                        <div class="col-12 text-start">
+                            <label for="district" class="form-label">Выберете район</label>
+                            <input class="form-control" list="districtOptions" name="district" id="district"
+                                   placeholder="Введите для поиска" disabled>
+                            <datalist id="districtOptions">
+                                {%for district in districts%}
+                                <option value="{{district}}">
+                                    {%endfor%}
+                            </datalist>
+                        </div>
+                        <div class="form-check text-start">
+                            <input type="checkbox" class="form-check-input" onchange="checkParams()" name="distr"
+                                   id="distr">
+                            <label class="form-check-label" for="distr"><strong>Добавить поиск по району</strong></label>
+                        </div>
                         <div class="form-check text-start">
                             <input type="radio" class="form-check-input" onchange="checkParams()" name="confirm" value="0"
                                    id="confirm">
                             <label class="form-check-label" for="confirm"><strong>Загрузить фотографии</strong></label>
                         </div>
+
                         <div class="form-check text-start">
                             <input type="radio" class="form-check-input" onchange="checkParams()" name="confirm" value="1"
                                    id="confirm_1">
@@ -152,6 +159,7 @@
     var file = document.getElementById("file");
     var checkbox1 = $('#confirm').prop('checked');
     var checkbox2 = $('#confirm_1').prop('checked');
+    var checkbox3 = $('#distr').prop('checked');
     if(select != 0 && select_2 != 0 && file.value != "" && checkbox1 || select != 0 && select_2 != 0 && checkbox2) {
         $('#btnSubmit').removeAttr('disabled');
     } else {
@@ -161,6 +169,11 @@
         $('#file').attr('disabled', 'disabled');
     } else {
         $('#file').removeAttr('disabled');
+    }
+    if(checkbox3){
+        $('#district').removeAttr('disabled');
+    } else {
+        $('#district').attr('disabled', 'disabled');
     }
 }
 

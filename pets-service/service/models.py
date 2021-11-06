@@ -9,6 +9,7 @@ class Application(db.Model):
     photo = db.Column(db.Integer(), db.ForeignKey('photos.id'))
     status = db.Column(db.Boolean(), default=False)
     type = db.Column(db.Integer())
+    district = db.Column(db.String(), default="0")
 
 
 class Photos(db.Model):
@@ -23,6 +24,7 @@ class Photos(db.Model):
     address = db.Column(db.String(), nullable=True)
     cam_id = db.Column(db.String(), nullable=True)
     result = db.Column(db.Boolean, nullable=True)
+    district = db.Column(db.String())
 
 
     def __repr__(self):
@@ -39,6 +41,7 @@ class Testphotos(db.Model):
     tail = db.Column(db.Integer(), nullable=True)
     address = db.Column(db.String(), nullable=True)
     cam_id = db.Column(db.String(), nullable=True)
+    district = db.Column(db.String())
 
     def __repr__(self):
         return (self.id_application, self.filename, self.is_animal_there, self.is_it_a_dog, self.is_the_owner, self.color, self.tail, self.address, self.cam_id)

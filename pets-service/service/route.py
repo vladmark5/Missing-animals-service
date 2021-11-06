@@ -27,19 +27,23 @@ def about_page():
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():
-    with open('service/static/district.json', 'rb') as file:
+    with open('service/static/distr_new.json', 'rb') as file:
         j = json.load(file)
     districts = j['district']
     foto_list = []
     test_photo = os.listdir(app.config['UPLOAD_FOLDER'])
-    param = {'Светлый':2, 'Темный':0, 'Разноцветный':3, 'Длинный':2, 'Короткий/Нет хвоста':0}
+    param = {'Светлый':2, 'Темный':1, 'Разноцветный':3, 'Длинный':2, 'Короткий/Нет хвоста':1}
     if request.method == 'GET':
         if len(db.session.query(Application).all()) != 0:
             return redirect(url_for('result'))
         else:
             return render_template('create.html', districts=districts)
     if request.method == 'POST':
-        create = Application(animal='dog', photo=1, color=param[request.form.get('color')], tail=param[request.form.get('tils')], type=request.form['confirm'])
+        print(request.form)
+        if 'distr' in request.form:
+            create = Application(animal='dog', photo=1, color=param[request.form.get('color')], district=request.form['district'], tail=param[request.form.get('tils')], type=request.form['confirm'])
+        else:
+            create = Application(animal='dog', photo=1, color=param[request.form.get('color')], tail=param[request.form.get('tils')], type=request.form['confirm'])
         db.session.add(create)
         db.session.commit()
         if request.form['confirm'] == "0":
@@ -71,17 +75,25 @@ def result():
             return redirect(url_for('create'))
         else:
             if type.type == 0:
-                files = db.session.query(Photos).filter_by(result=1).all()
-                return render_template('result.html', files=files, apps=apps)
+                if type.district == '0':
+                    files = db.session.query(Photos).filter_by(result=1).all()
+                    return render_template('result.html', files=files, apps=apps)
+                else:
+                    files = db.session.query(Photos).filter_by(result=1, district=type.district).all()
+                    return render_template('result.html', files=files, apps=apps)
             else:
-                file_test = db.session.query(Testphotos).filter_by(color=type.color, tail=type.tail, is_it_a_dog=1).all()
+                print(type.tail)
+                if type.district == '0':
+                    file_test = db.session.query(Testphotos).filter_by(tail=type.tail, color=type.color).all()
+                else:
+                    file_test = db.session.query(Testphotos).filter_by(district=type.district, tail=type.tail, color=type.color).all()
                 df_result = pd.DataFrame([(
                                           d.filename, d.is_animal_there, d.is_it_a_dog, d.is_the_owner, d.color, d.tail,
                                           d.address, d.cam_id) for d in file_test],
-                                         columns=['filename', 'is_animal_there', 'is_it_a_dog', 'is_the_owner', 'color',
+                                         columns=['filename', 'is_animal_there', 'is_it_a_dog', 'is_the_owner_there', 'color',
                                                   'tail', 'address', 'cam_id'])
 
-                df_result.to_csv('service/static/result.csv', encoding='cp1251')
+                df_result.to_csv('service/static/result.csv')
                 return render_template('result.html', files=file_test, apps=apps)
     if request.method=='POST':
         if type.type == 0:

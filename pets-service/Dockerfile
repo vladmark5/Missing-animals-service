@@ -2,7 +2,7 @@ FROM python:3.8-slim-buster
 ENV FLASK_APP=run.py
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV host_api=94.26.229.140
-ENV port_api=5000
+ENV port_api=5002
 RUN apt-get update -y
 RUN apt-get install -y python-pip python-dev build-essential
 RUN apt install -y libgl1-mesa-glx

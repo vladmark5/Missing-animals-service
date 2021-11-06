@@ -10,6 +10,10 @@ from service.models import db, Photos, Application
 import re
 from service.bcnn import image_predict
 
+def draw_box(image,pred_info):
+    image = cv2.rectangle(image, (int(pred_info["xmin"]), int(pred_info["ymin"])), (int(pred_info["xmax"]), int(pred_info["ymax"])), (255,255,0), 2)
+    return image
+
 def addres(max_count, results, df):
     distrs = []
     id = []
@@ -36,8 +40,8 @@ def addres(max_count, results, df):
 def main_get_address(photos):
     df = pd.read_csv(f'service/static/addres_csv.csv')
     #pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-    param = {'long': 0, 'short': 1, 'dark': 1, 'white': 0,
-             'multi-color': 2}
+    param = {'long': 2, 'short': 0, 'dark': 0, 'white': 2,
+             'multi-color': 3, False: 0, True: 1}
     apps_color, apps_tail = int(db.session.query(Application).first().color), int(db.session.query(Application).first().tail)
     for photo in photos:
         image = cv2.imread(f'service/uploads/{photo}')
@@ -58,16 +62,20 @@ def main_get_address(photos):
                 result = 0
             if len(res) == 0:
                 if predict.text == 'Dogs not found! :(':
-                    db.session.add(Photos(id_application=1, filename=photo, is_animal_there=0, is_it_a_dog=0, is_the_owner=0, result=result, cam_id='', address=''))
+                    db.session.add(Photos(id_application=1, filename=photo, is_animal_there=0, is_it_a_dog=0, is_the_owner=0, color=0, tail=0, result=result, cam_id='', address=''))
                 else:
-                    db.session.add(Photos(id_application=1, filename=photo, tail=param[predict.json()['tail']],is_animal_there=1, is_it_a_dog=1, cam_id='', address='', color=param[predict.json()['color']], result=result))
+                    db.session.add(Photos(id_application=1, filename=photo, is_the_owner=param[predict.json()['master']], tail=param[predict.json()['tail']],is_animal_there=1, is_it_a_dog=1, cam_id='', address='', color=param[predict.json()['color']], result=result))
+                    photo_draw = draw_box(image, predict.json()['pred_info'])
+                    cv2.imwrite(f'service/uploads/{photo}', photo_draw)
             else:
                 if predict.text == 'Dogs not found! :(':
-                    db.session.add(Photos(id_application=1, filename=photo, address=re.sub(r'[^\w\s]','', res[0]).lower(),is_animal_there=0, is_it_a_dog=0, is_the_owner=0, cam_id=res[1], result=result))
+                    db.session.add(Photos(id_application=1, filename=photo, address=re.sub(r'[^\w\s]','', res[0]).lower(),is_animal_there=0, color=0, tail=0, is_it_a_dog=0, is_the_owner=0, cam_id=res[1], result=result))
                 else:
                     db.session.add(
-                        Photos(id_application=1, filename=photo, is_it_a_dog=1, address=re.sub(r'[^\w\s]','', res[0]).lower(), cam_id=res[1], tail=param[predict.json()['tail']], is_animal_there=1,
+                        Photos(id_application=1, filename=photo, is_the_owner=param[predict.json()['master']], is_it_a_dog=1, address=re.sub(r'[^\w\s]','', res[0]).lower(), cam_id=res[1], tail=param[predict.json()['tail']], is_animal_there=1,
                                color=param[predict.json()['color']], result=result))
+                    photo_draw = draw_box(image, predict.json()['pred_info'])
+                    cv2.imwrite(f'service/uploads/{photo}', photo_draw)
             db.session.commit()
         db.session.query(Application).filter_by(id=1).update({Application.status: 1})
         db.session.commit()

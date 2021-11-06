@@ -117,6 +117,8 @@ def dog_detect():
         base64_image = base64.b64encode(buffer)
 
         result = {'dog_image':base64_image.decode("utf-8"),
+                'pred_info':dog_preds[0],
+                'master':False,
                 'tail':tail,
                 'color':color}
         return result

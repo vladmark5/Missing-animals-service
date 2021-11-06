@@ -31,7 +31,7 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{ url_for('main_page') }}">Главная траница</a>
+                        <a class="nav-link" aria-current="page" href="{{ url_for('main_page') }}">Главная страница</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{{ url_for('about_page') }}">О проекте</a>
@@ -59,30 +59,39 @@
             <h2>Данных для поиска нет </h2>
             {% endif %}
         </div>
+        <form method="post" style="color:white">
+            <button class="btn btn-primary btn-lg" type="submit" id="btnSubmit">Cоздать новую заявку</button>
+            <a href="{{ url_for('static', filename='result.csv') }}" type="button" class="btn btn-primary btn-lg"
+               download>Скачать CSV</a>
+        </form>
         <div class="row justify-content-center">
 
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 {% for file in files %}
                 <div class="col">
                     <div class="card">
-                        <img class="img-thumbnail" src="{{ url_for('download_file', name=file.filename) }}" width="100%" height="100%" class="img-thumbnail" alt="...">
+                        <img class="img-thumbnail" src="{{ url_for('download_file', name=file.filename) }}" width="100%"
+                             height="100%" class="img-thumbnail" alt="...">
                         <div class="card-body text-start">
-                            <p class="card-text">Адрес:  {% if file.address == '' %}-{% else %}{{file.address}}{% endif %}</p>
-                            <p class="card-text">ID камеры:  {% if file.cam_id == '' %}-{% else %}{{file.cam_id}}{% endif %}</p>
-                            <p class="card-text">Собака на фото: {% if file.is_animal_there == 1%}Да{% else %}Нет{% endif %}</p>
-                            <p class="card-text">Хозяин на фото: </p>
-                            <p class="card-text">Цвет: {% if file.color == None %}-{% elif file.color == 0 %}Светлый{% elif file.color == 1 %}Темный{% else %}Разноцвеный{% endif %}</p>
-                            <p class="card-text">Длинна хвоста: {% if file.tail == None %}-{% elif file.tail == 0 %}Длинный{% else %}Короткий/Нет хвоста{% endif %}</p>
-                            <p class="card-text">Совпало с заданными параметрами: {% if file.result == 1 %}Да{% else %}Нет{% endif %}</p>
+                            <p class="card-text">Адрес: {% if file.address == '' %}Не распознано{% else
+                                %}{{file.address}}{% endif %}</p>
+                            <p class="card-text">ID камеры: {% if file.cam_id == '' %}Не распознано{% else
+                                %}{{file.cam_id}}{% endif %}</p>
+                            <p class="card-text">Собака на фото: {% if file.is_animal_there == 1%}Да{% else %}Нет{%
+                                endif %}</p>
+                            <p class="card-text">Хозяин на фото:{% if file.is_the_owner == 1%}Да{% else %}Нет{% endif
+                                %} </p>
+                            <p class="card-text">Цвет: {% if file.color == 0 %}Темный{% elif file.color == 2 %}Светлы{%
+                                else %}
+                                Разноцветный{% endif %}</p>
+                            <p class="card-text">Длина хвоста: {% if file.tail == 2 %}Длинный
+                                {% elif file.tail == 0 %}Короткий/Нет хвоста{% else %}{% endif %}</p>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-            <form method="post" class="col-md-7 col-lg-8 py-5" style="color:white">
-                <button class="btn btn-primary btn-lg" type="submit" id="btnSubmit">Cоздать новую заявку</button>
-                <a href="{{ url_for('static', filename='result.csv') }}" type="button" class="btn btn-primary btn-lg" download>Скачать CSV</a>
-            </form>
+
         </div>
     </main>
 </div>
